@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Windows.Forms;
 
-namespace PassbookManagement
+namespace ReactionSeriesSolver
 {
 	class SQLiteDatabase
 	{

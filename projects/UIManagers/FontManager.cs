@@ -1,5 +1,5 @@
 ﻿
-using PassbookManagement.Properties;
+using ReactionSeriesSolver.Properties;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

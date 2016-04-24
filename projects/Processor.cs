@@ -24,64 +24,61 @@ namespace ReactionSeriesSolver
 
 	public static class Processor
 	{
-		public static List<Pair<List<string>, List<string>>> LoadReactionFromFile(string filePath)
+		public static List<Pair<List<string>, List<string>>> LoadReactionListFromFile(string filePath)
 		{
-			// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-			// FOR DEBUG
-			// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-			List< Pair<List<string>, List<string>> > _reactionList = new List<Pair<List<string>, List<string>>>();
+			var _readstream = new System.IO.FileStream(filePath,
+										  System.IO.FileMode.Open,
+										  System.IO.FileAccess.Read,
+										  System.IO.FileShare.ReadWrite);
+			var _reader = new System.IO.StreamReader(_readstream, System.Text.Encoding.UTF8, true, 128);
 
-			_reactionList.Add(AddReaction("blablabla"));
+			List<Pair<List<string>, List<string>>> _reactionList = new List<Pair<List<string>, List<string>>>();
 
-			// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-			// FOR RELEASE
-			// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-			// TODO: Add real algorithm
+			string _reactionStr = null;
+			while ((_reactionStr = _reader.ReadLine()) != null)
+			{
+				_reactionList.Add(AnalyzeReaction(_reactionStr));
+			}
+
+			_reader.Dispose();
+			_readstream.Dispose();
 
 			return _reactionList;
 		}
 
-		public static Pair<List<string>, List<string>> AddReaction(string reaction)
+		public static Pair<List<string>, List<string>> AnalyzeReaction(string reactionStr)
 		{
-			List<string> _first = new List<string>();
-			List<string> _second = new List<string>();
+			reactionStr = reactionStr.Split('|')[0];
+			reactionStr = reactionStr.Replace(" ", "");
+			string[] _sides = reactionStr.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
 
-			_first.Add("Cl2");
-			_first.Add("NaOH");
+			string[] _reactants = _sides[0].Split('+');
+			string[] _products = _sides[1].Split('+');
 
-			_second.Add("NaCl");
-			_second.Add("NaClO");
-			_second.Add("H2O");
-
-			return new Pair<List<string>, List<string>>(_first, _second);
+			return new Pair<List<string>, List<string>>(_reactants.ToList<string>(), _products.ToList<string>());
 		}
 
-		public static Pair<List<string>, List<string>> AnalyzeReaction(string reaction)
+		public static List<Pair<List<string>, List<string>>> AnalyzeReactionSeries(string reactionSeriesStr)
 		{
-			// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-			// FOR DEBUG
-			// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-			List<string> _first = new List<string>();
-			List<string> _second = new List<string>();
+			List<Pair<List<string>, List<string>>> _reactionSeries = new List<Pair<List<string>, List<string>>>();
 
-			_first.Add("Cl2");
+			_reactionSeries.Add(AnalyzeReaction("blablabla"));
+			_reactionSeries.Add(AnalyzeReaction("blablabla"));
+			_reactionSeries.Add(AnalyzeReaction("blablabla"));
 
-			_second.Add("NaCl");
-			_second.Add("NaClO");
-
-			return new Pair<List<string>, List<string>>(_first, _second);
-
-			// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-			// FOR RELEASE
-			// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-			// TODO: Add real algorithm
+			return _reactionSeries;
 		}
 
-		public static Pair<List<string>, List<string>> FindReaction(List<Pair<List<string>, List<string>>> reactionList, 
-																	Pair<List<string>, List<string>> reaction)
+		public static int FindReaction(List<Pair<List<string>, List<string>>> reactionList, 
+																	Pair<List<string>, List<string>> reaction, int offset = 0)
 		{
-			// TODO: Add default value: null
-			return reactionList[0];
+			for(int i = offset; i < reactionList.Count; i++)
+			{
+				if (IsContain(reactionList[i], reaction))
+					return i;
+			}
+
+			return -1;
 		}
 
 		public static List<int> BalanceReaction(Pair<List<string>, List<string>> reaction)
@@ -94,17 +91,35 @@ namespace ReactionSeriesSolver
 			_coefficients.Add(4);
 			_coefficients.Add(5);
 
-			return null;
+			return _coefficients;
 		}
 
 		public static string GenerateReaction(Pair<List<string>, List<string>> reaction, List<int> coefficients)
 		{
-			//foreach (string _reactant in reaction.First)
-			//{
+			for(int i = 0; i < reaction.First.Count; i++)
+				reaction.First[i] = coefficients[i].ToString() + reaction.First[i];
 
-			//}
+			for (int i = 0; i < reaction.Second.Count; i++)
+				reaction.Second[i] = coefficients[i + reaction.First.Count].ToString() + reaction.Second[i];
 
-			return "Cl2 + NaOH -> NaCl + NaClO + H2O";
+			return string.Join(" + ", reaction.First) + " -> " + string.Join(" + ", reaction.Second);
+		}
+
+		private static bool IsContain(Pair<List<string>, List<string>> container, Pair<List<string>, List<string>> candidate)
+		{
+			foreach(string _str in candidate.First)
+			{
+				if (!container.First.Contains(_str))
+					return false;
+			}
+
+			foreach (string _str in candidate.Second)
+			{
+				if (!container.Second.Contains(_str))
+					return false;
+			}
+
+			return true;
 		}
 	}
 }

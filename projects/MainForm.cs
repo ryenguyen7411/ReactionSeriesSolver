@@ -22,30 +22,64 @@ namespace ReactionSeriesSolver
 		public MainForm()
         {
             InitializeComponent();
-			ReactionList = Processor.LoadReactionFromFile("reactions.pro");
+			ReactionList = Processor.LoadReactionListFromFile(@"..\..\data\reactions.pro");
 		}
 
 		private void btn_solve_reaction_Click(object sender, EventArgs e)
 		{
 			string _reactionStr = txt_reaction.Text;
-			Pair<List<string>, List<string>> _reaction = Processor.AnalyzeReaction(_reactionStr);
 
-			Pair<List<string>, List<string>> _reactionTarget = Processor.FindReaction(ReactionList, _reaction);
-
-			if(_reactionTarget != null)
+			try
 			{
-				List<int> _coefficients = Processor.BalanceReaction(_reactionTarget);
-				txt_result_reaction.Text = Processor.GenerateReaction(_reactionTarget, _coefficients);
+				Pair<List<string>, List<string>> _reaction = Processor.AnalyzeReaction(_reactionStr);
+
+				int _reactionTargetId = Processor.FindReaction(ReactionList, _reaction);
+
+				if (ReactionList[_reactionTargetId] != null)
+				{
+					List<int> _coefficients = Processor.BalanceReaction(ReactionList[_reactionTargetId]);
+					txt_result_reaction.Text = Processor.GenerateReaction(ReactionList[_reactionTargetId], _coefficients);
+				}
+				else
+				{
+					txt_result_reaction.Text = "Could not solve reaction!!!";
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				txt_result_reaction.Text = "Could not find reaction!!!";
+				Console.WriteLine("{0} Exception caught.", ex);
 			}
 		}
 
 		private void btn_solve_reactionSeries_Click(object sender, EventArgs e)
 		{
+			txt_result_reactionSeries.Text = "";
 
+			try
+			{
+				string _reactionSeriesStr = txt_reaction.Text;
+				List<Pair<List<string>, List<string>>> _reactionSeries = Processor.AnalyzeReactionSeries(_reactionSeriesStr);
+
+				for (int i = 0; i < _reactionSeries.Count; i++)
+				{
+					int _reactionTargetId = Processor.FindReaction(ReactionList, _reactionSeries[i]);
+
+					if (ReactionList[_reactionTargetId] != null)
+					{
+						List<int> _coefficients = Processor.BalanceReaction(ReactionList[_reactionTargetId]);
+						txt_result_reactionSeries.Text += "(" + (i + 1) + "): " + Processor.GenerateReaction(ReactionList[_reactionTargetId], _coefficients) + Environment.NewLine;
+					}
+					else
+					{
+						txt_result_reactionSeries.Text = "Could not solve reaction series!!!";
+						break;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("{0} Exception caught.", ex);
+			}
 		}
 	}
 }

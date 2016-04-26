@@ -55,6 +55,7 @@ namespace ReactionSeriesSolver
 			string[] _reactants = _sides[0].Split('+');
 			string[] _products = _sides[1].Split('+');
 
+
 			return new Pair<List<string>, List<string>>(_reactants.ToList<string>(), _products.ToList<string>());
 		}
 
@@ -85,37 +86,42 @@ namespace ReactionSeriesSolver
 		{
 			List<int> _coefficients = new List<int>();
 
-			_coefficients.Add(1);
-			_coefficients.Add(2);
-			_coefficients.Add(3);
-			_coefficients.Add(4);
-			_coefficients.Add(5);
+			//_coefficients.Add(1);
+			//_coefficients.Add(2);
+			//_coefficients.Add(3);
+			//_coefficients.Add(4);
+			//_coefficients.Add(5);
 
 			return _coefficients;
 		}
 
 		public static string GenerateReaction(Pair<List<string>, List<string>> reaction, List<int> coefficients)
 		{
-			for(int i = 0; i < reaction.First.Count; i++)
-				reaction.First[i] = coefficients[i].ToString() + reaction.First[i];
+			//for(int i = 0; i < reaction.First.Count; i++)
+			//	reaction.First[i] = coefficients[i].ToString() + reaction.First[i];
 
-			for (int i = 0; i < reaction.Second.Count; i++)
-				reaction.Second[i] = coefficients[i + reaction.First.Count].ToString() + reaction.Second[i];
+			//for (int i = 0; i < reaction.Second.Count; i++)
+			//	reaction.Second[i] = coefficients[i + reaction.First.Count].ToString() + reaction.Second[i];
 
 			return string.Join(" + ", reaction.First) + " -> " + string.Join(" + ", reaction.Second);
 		}
 
 		private static bool IsContain(Pair<List<string>, List<string>> container, Pair<List<string>, List<string>> candidate)
 		{
-			foreach(string _str in candidate.First)
+			if (container.First.Count < candidate.First.Count)
+				return false;
+			if (container.Second.Count < candidate.Second.Count)
+				return false;
+
+			foreach (string _str in candidate.First)
 			{
-				if (!container.First.Contains(_str))
+				if (_str != "?" && !container.First.Contains(_str))
 					return false;
 			}
 
 			foreach (string _str in candidate.Second)
 			{
-				if (!container.Second.Contains(_str))
+				if (_str != "?" && !container.Second.Contains(_str))
 					return false;
 			}
 

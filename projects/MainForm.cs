@@ -57,23 +57,64 @@ namespace ReactionSeriesSolver
 
 			try
 			{
-				string _reactionSeriesStr = txt_reaction.Text;
+				string _reactionSeriesStr = txt_reactionSeries.Text;
 				List<Pair<List<string>, List<string>>> _reactionSeries = Processor.AnalyzeReactionSeries(_reactionSeriesStr);
+				int[] _reactionId = new int[_reactionSeries.Count];
+				ReactionState[] _reactionState = new ReactionState[_reactionSeries.Count];
 
 				for (int i = 0; i < _reactionSeries.Count; i++)
 				{
-					int _reactionTargetId = Processor.FindReaction(ReactionList, _reactionSeries[i]);
+					_reactionId[i] = -1;
+					_reactionState[i] = Processor.GetReactionState(_reactionSeries[i]);
+				}
 
-					if (ReactionList[_reactionTargetId] != null)
+				for (int i = 0; i < _reactionSeries.Count; i++)
+				{
+					_reactionId[i] = Processor.FindReaction(ReactionList, _reactionSeries[i], _reactionId[i]);
+
+					if (_reactionId[i] == -1)
 					{
-						List<int> _coefficients = Processor.BalanceReaction(ReactionList[_reactionTargetId]);
-						txt_result_reactionSeries.Text += "(" + (i + 1) + "): " + Processor.GenerateReaction(ReactionList[_reactionTargetId], _coefficients) + Environment.NewLine;
+						// DONE
+						if(i <= 0)
+						{
+							txt_result_reactionSeries.Text = "NULL";
+							return;
+						}
+
+						if ((_reactionState[i] & ReactionState.LEFT_UNKNOWN) == ReactionState.LEFT_UNKNOWN)
+						{
+							string _nextElement = Processor.GetNextElement(_reactionSeries[i].First, _reactionSeries[i].First[0]);
+
+							if (_nextElement != null)
+							{
+								_reactionSeries[i].First[0] = Processor.GetNextElement(_reactionSeries[i].First, _reactionSeries[i].First[0]);
+								_reactionSeries[i - 1].Second[0] = _reactionSeries[i].First[0];
+							}
+							else
+							{
+								_reactionSeries[i - 1].Second[0] = _reactionSeries[i].First[0] = "?";
+							}
+						}
+
+						i--;
+						continue;
 					}
-					else
+
+					if ((_reactionState[i] & ReactionState.RIGHT_UNKNOWN) == ReactionState.RIGHT_UNKNOWN)
 					{
-						txt_result_reactionSeries.Text = "Could not solve reaction series!!!";
-						break;
+						_reactionSeries[i].Second[0] = Processor.GetNextElement(ReactionList[_reactionId[i]].Second, _reactionSeries[i].Second[0]);
+
+						if(i < _reactionSeries.Count - 1)
+							_reactionSeries[i + 1].First[0] = _reactionSeries[i].Second[0];
 					}
+				}
+
+				for (int i = 0; i < _reactionSeries.Count; i++)
+				{
+					List<int> _coefficients = Processor.BalanceReaction(ReactionList[_reactionId[i]]);
+					txt_result_reactionSeries.Text += "(" + (i + 1) + "): ";
+					txt_result_reactionSeries.Text += Processor.GenerateReaction(ReactionList[_reactionId[i]], _coefficients);
+					txt_result_reactionSeries.Text += Environment.NewLine;
 				}
 			}
 			catch (Exception ex)

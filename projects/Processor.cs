@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace ReactionSeriesSolver
 {
+	public enum ReactionState
+	{
+		BOTH_KNOWN,
+		LEFT_UNKNOWN,
+		RIGHT_UNKNOWN,
+		BOTH_UNKNOWN = LEFT_UNKNOWN | RIGHT_UNKNOWN
+	}
+
 	public class Pair<T, U>
 	{
 		public Pair()
@@ -50,11 +58,11 @@ namespace ReactionSeriesSolver
 		{
 			reactionStr = reactionStr.Split('|')[0];
 			reactionStr = reactionStr.Replace(" ", "");
+			reactionStr = reactionStr.Replace("=", "->");
 			string[] _sides = reactionStr.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
 
 			string[] _reactants = _sides[0].Split('+');
 			string[] _products = _sides[1].Split('+');
-
 
 			return new Pair<List<string>, List<string>>(_reactants.ToList<string>(), _products.ToList<string>());
 		}
@@ -63,9 +71,12 @@ namespace ReactionSeriesSolver
 		{
 			List<Pair<List<string>, List<string>>> _reactionSeries = new List<Pair<List<string>, List<string>>>();
 
-			_reactionSeries.Add(AnalyzeReaction("blablabla"));
-			_reactionSeries.Add(AnalyzeReaction("blablabla"));
-			_reactionSeries.Add(AnalyzeReaction("blablabla"));
+			string[] _sides = reactionSeriesStr.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
+
+			for(int i = 0; i < _sides.Length - 1; i++)
+			{
+				_reactionSeries.Add(AnalyzeReaction(_sides[i] + " -> " + _sides[i + 1]));
+			}
 
 			return _reactionSeries;
 		}
@@ -73,7 +84,7 @@ namespace ReactionSeriesSolver
 		public static int FindReaction(List<Pair<List<string>, List<string>>> reactionList, 
 																	Pair<List<string>, List<string>> reaction, int offset = 0)
 		{
-			for(int i = offset; i < reactionList.Count; i++)
+			for(int i = offset + 1; i < reactionList.Count; i++)
 			{
 				if (IsContain(reactionList[i], reaction))
 					return i;
@@ -126,6 +137,43 @@ namespace ReactionSeriesSolver
 			}
 
 			return true;
+		}
+
+		public static ReactionState GetReactionState(Pair<List<string>, List<string>> reaction)
+		{
+			ReactionState _state = new ReactionState();
+			_state = ReactionState.BOTH_KNOWN;
+
+			if(reaction.First.Contains("?"))
+			{
+				_state = ReactionState.LEFT_UNKNOWN;
+			}
+
+			if(reaction.Second.Contains("?"))
+			{
+				if (_state == ReactionState.LEFT_UNKNOWN)
+					_state = ReactionState.BOTH_UNKNOWN;
+				else
+					_state = ReactionState.RIGHT_UNKNOWN;
+			}
+
+			return _state;
+		}
+
+		public static string GetNextElement(List<string> list, string current)
+		{
+			if (current == "?" && list.Count > 0)
+				return list[0];
+
+			for(int i = 0; i < list.Count - 1; i++)
+			{
+				if(list[i] == current)
+				{
+					return list[i + 1];
+				}
+			}
+
+			return null;
 		}
 	}
 }

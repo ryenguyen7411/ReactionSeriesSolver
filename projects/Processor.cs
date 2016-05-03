@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace ReactionSeriesSolver
 {
@@ -30,6 +29,11 @@ namespace ReactionSeriesSolver
 		public U Second { get; set; }
 	};
 
+	public class Reactant
+	{
+		public List<Pair<string, int>> Atoms { get; set; }
+	}
+
 	public static class Processor
 	{
 		public static List<Pair<List<string>, List<string>>> LoadReactionListFromFile(string filePath)
@@ -47,7 +51,7 @@ namespace ReactionSeriesSolver
 			{
 				_reactionList.Add(AnalyzeReaction(_reactionStr));
 			}
-
+			
 			_reader.Dispose();
 			_readstream.Dispose();
 
@@ -93,26 +97,13 @@ namespace ReactionSeriesSolver
 			return -1;
 		}
 
-		public static List<int> BalanceReaction(Pair<List<string>, List<string>> reaction)
-		{
-			List<int> _coefficients = new List<int>();
-
-			//_coefficients.Add(1);
-			//_coefficients.Add(2);
-			//_coefficients.Add(3);
-			//_coefficients.Add(4);
-			//_coefficients.Add(5);
-
-			return _coefficients;
-		}
-
 		public static string GenerateReaction(Pair<List<string>, List<string>> reaction, List<int> coefficients)
 		{
-			//for(int i = 0; i < reaction.First.Count; i++)
-			//	reaction.First[i] = coefficients[i].ToString() + reaction.First[i];
+			for (int i = 0; i < reaction.First.Count; i++)
+				reaction.First[i] = ((coefficients[i] != 1) ? coefficients[i].ToString() : "") + reaction.First[i];
 
-			//for (int i = 0; i < reaction.Second.Count; i++)
-			//	reaction.Second[i] = coefficients[i + reaction.First.Count].ToString() + reaction.Second[i];
+			for (int i = 0; i < reaction.Second.Count; i++)
+				reaction.Second[i] = ((coefficients[i + reaction.First.Count] != 1) ? coefficients[i + reaction.First.Count].ToString() : "") + reaction.Second[i];
 
 			return string.Join(" + ", reaction.First) + " -> " + string.Join(" + ", reaction.Second);
 		}
@@ -174,6 +165,33 @@ namespace ReactionSeriesSolver
 			}
 
 			return null;
+		}
+
+		public static int GCD(int first, int second)
+		{
+			first = Math.Abs(first);
+			second = Math.Abs(second);
+
+			while(second != 0)
+			{
+				int _temp = first % second;
+				first = second;
+				second = _temp;
+			}
+
+			return first;
+		}
+
+		public static int GCD(List<int> row)
+		{
+			int _result = 0;
+
+			foreach(int _value in row)
+			{
+				_result = GCD(_value, _result);
+			}
+
+			return _result;
 		}
 	}
 }

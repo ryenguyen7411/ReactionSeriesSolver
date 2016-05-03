@@ -37,7 +37,7 @@ namespace ReactionSeriesSolver
 
 				if (ReactionList[_reactionTargetId] != null)
 				{
-					List<int> _coefficients = Processor.BalanceReaction(ReactionList[_reactionTargetId]);
+					List<int> _coefficients = ReactionBalancer.BalanceReaction(ReactionList[_reactionTargetId]);
 					txt_result_reaction.Text = Processor.GenerateReaction(ReactionList[_reactionTargetId], _coefficients);
 				}
 				else
@@ -111,7 +111,7 @@ namespace ReactionSeriesSolver
 
 				for (int i = 0; i < _reactionSeries.Count; i++)
 				{
-					List<int> _coefficients = Processor.BalanceReaction(ReactionList[_reactionId[i]]);
+					List<int> _coefficients = ReactionBalancer.BalanceReaction(ReactionList[_reactionId[i]]);
 					txt_result_reactionSeries.Text += "(" + (i + 1) + "): ";
 					txt_result_reactionSeries.Text += Processor.GenerateReaction(ReactionList[_reactionId[i]], _coefficients);
 					txt_result_reactionSeries.Text += Environment.NewLine;

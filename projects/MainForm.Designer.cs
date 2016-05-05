@@ -30,10 +30,11 @@
         {
 			this.tab_pageControl = new System.Windows.Forms.TabControl();
 			this.tab_reaction = new System.Windows.Forms.TabPage();
+			this.tab_reactionSeries = new System.Windows.Forms.TabPage();
+			this.web_reaction = new System.Windows.Forms.WebBrowser();
 			this.txt_result_reaction = new LollipopTextBox();
 			this.btn_solve_reaction = new LollipopButton();
 			this.txt_reaction = new LollipopTextBox();
-			this.tab_reactionSeries = new System.Windows.Forms.TabPage();
 			this.txt_result_reactionSeries = new LollipopTextBox();
 			this.btn_solve_reactionSeries = new LollipopButton();
 			this.txt_reactionSeries = new LollipopTextBox();
@@ -54,6 +55,7 @@
 			// 
 			// tab_reaction
 			// 
+			this.tab_reaction.Controls.Add(this.web_reaction);
 			this.tab_reaction.Controls.Add(this.txt_result_reaction);
 			this.tab_reaction.Controls.Add(this.btn_solve_reaction);
 			this.tab_reaction.Controls.Add(this.txt_reaction);
@@ -65,17 +67,38 @@
 			this.tab_reaction.Text = "Reaction";
 			this.tab_reaction.UseVisualStyleBackColor = true;
 			// 
+			// tab_reactionSeries
+			// 
+			this.tab_reactionSeries.Controls.Add(this.txt_result_reactionSeries);
+			this.tab_reactionSeries.Controls.Add(this.btn_solve_reactionSeries);
+			this.tab_reactionSeries.Controls.Add(this.txt_reactionSeries);
+			this.tab_reactionSeries.Location = new System.Drawing.Point(4, 22);
+			this.tab_reactionSeries.Name = "tab_reactionSeries";
+			this.tab_reactionSeries.Padding = new System.Windows.Forms.Padding(3);
+			this.tab_reactionSeries.Size = new System.Drawing.Size(752, 391);
+			this.tab_reactionSeries.TabIndex = 1;
+			this.tab_reactionSeries.Text = "Reaction Series";
+			this.tab_reactionSeries.UseVisualStyleBackColor = true;
+			// 
+			// web_reaction
+			// 
+			this.web_reaction.Location = new System.Drawing.Point(24, 132);
+			this.web_reaction.MinimumSize = new System.Drawing.Size(20, 20);
+			this.web_reaction.Name = "web_reaction";
+			this.web_reaction.Size = new System.Drawing.Size(430, 223);
+			this.web_reaction.TabIndex = 3;
+			// 
 			// txt_result_reaction
 			// 
 			this.txt_result_reaction.FocusedColor = "#508ef5";
 			this.txt_result_reaction.FontColor = "#999999";
 			this.txt_result_reaction.IsEnabled = true;
-			this.txt_result_reaction.Location = new System.Drawing.Point(158, 148);
+			this.txt_result_reaction.Location = new System.Drawing.Point(460, 132);
 			this.txt_result_reaction.MaxLength = 32767;
 			this.txt_result_reaction.Multiline = true;
 			this.txt_result_reaction.Name = "txt_result_reaction";
 			this.txt_result_reaction.ReadOnly = false;
-			this.txt_result_reaction.Size = new System.Drawing.Size(430, 164);
+			this.txt_result_reaction.Size = new System.Drawing.Size(289, 223);
 			this.txt_result_reaction.TabIndex = 2;
 			this.txt_result_reaction.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
 			this.txt_result_reaction.UseSystemPasswordChar = false;
@@ -106,19 +129,6 @@
 			this.txt_reaction.TabIndex = 0;
 			this.txt_reaction.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
 			this.txt_reaction.UseSystemPasswordChar = false;
-			// 
-			// tab_reactionSeries
-			// 
-			this.tab_reactionSeries.Controls.Add(this.txt_result_reactionSeries);
-			this.tab_reactionSeries.Controls.Add(this.btn_solve_reactionSeries);
-			this.tab_reactionSeries.Controls.Add(this.txt_reactionSeries);
-			this.tab_reactionSeries.Location = new System.Drawing.Point(4, 22);
-			this.tab_reactionSeries.Name = "tab_reactionSeries";
-			this.tab_reactionSeries.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_reactionSeries.Size = new System.Drawing.Size(752, 391);
-			this.tab_reactionSeries.TabIndex = 1;
-			this.tab_reactionSeries.Text = "Reaction Series";
-			this.tab_reactionSeries.UseVisualStyleBackColor = true;
 			// 
 			// txt_result_reactionSeries
 			// 
@@ -192,6 +202,7 @@
 		private LollipopTextBox txt_result_reactionSeries;
 		private LollipopButton btn_solve_reactionSeries;
 		private LollipopTextBox txt_reactionSeries;
+		private System.Windows.Forms.WebBrowser web_reaction;
 	}
 }
 

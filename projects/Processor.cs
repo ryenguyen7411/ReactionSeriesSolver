@@ -97,15 +97,48 @@ namespace ReactionSeriesSolver
 			return -1;
 		}
 
-		public static string GenerateReaction(Pair<List<string>, List<string>> reaction, List<int> coefficients)
+		delegate string HTMLGenerator(string className, string value);
+		delegate string TextFormat(string tag, string value);
+		delegate string ReactionSideGenerator(List<List<Pair<string, int>>> info, List<int> coefs, int offset);
+		
+		public static string GenerateReaction(Pair<List<List<Pair<string, int>>>, List<List<Pair<string, int>>>> reactionInfo, List<int> coefficients)
 		{
-			for (int i = 0; i < reaction.First.Count; i++)
-				reaction.First[i] = ((coefficients[i] != 1) ? coefficients[i].ToString() : "") + reaction.First[i];
+			HTMLGenerator _generator = delegate(string className, string value){
+				return "<span class=\"" + className + "\">" + value + "</span>";
+			};
 
-			for (int i = 0; i < reaction.Second.Count; i++)
-				reaction.Second[i] = ((coefficients[i + reaction.First.Count] != 1) ? coefficients[i + reaction.First.Count].ToString() : "") + reaction.Second[i];
+			TextFormat _formater = delegate (string tag, string value) {
+				return "<" + tag + ">" + value + "</" + tag + ">";
+			};
 
-			return string.Join(" + ", reaction.First) + " -> " + string.Join(" + ", reaction.Second);
+			ReactionSideGenerator _sideGenerator = delegate(List<List<Pair<string, int>>> info, List<int> coefs, int offset){
+				string _value = "";
+
+				for (int i = 0; i < info.Count; i++)
+				{
+					if (coefficients[i + offset] != 1)
+						_value += _generator("coeff", coefficients[i + offset].ToString());
+
+					foreach (Pair<string, int> _element in info[i])
+					{
+						_value += _generator("element", _element.First);
+						if (_element.Second != 1)
+							_value += _formater("sub", _element.Second.ToString());
+					}
+
+					if (i < info.Count - 1)
+						_value += _generator("", " + ");
+				}
+
+				return _value;
+			};
+
+			string _reaction = "";
+			_reaction += _sideGenerator(reactionInfo.First, coefficients, 0);
+			_reaction += _generator("arrow", " → ");
+			_reaction += _sideGenerator(reactionInfo.First, coefficients, reactionInfo.First.Count);
+
+			return _reaction;
 		}
 
 		private static bool IsContain(Pair<List<string>, List<string>> container, Pair<List<string>, List<string>> candidate)

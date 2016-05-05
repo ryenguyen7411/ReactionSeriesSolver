@@ -10,21 +10,19 @@ namespace ReactionSeriesSolver
 {
 	public static class ReactionBalancer
 	{
-		public static List<int> BalanceReaction(Pair<List<string>, List<string>> reaction)
+		public static List<int> BalanceReaction(Pair<List<string>, List<string>> reaction, Pair<List<List<Pair<string, int>>>, List<List<Pair<string, int>>>> reactionInfo)
 		{
-			List<List<Pair<string, int>>> _left = new List<List<Pair<string, int>>>();
 			foreach (string _reactant in reaction.First)
 			{
-				_left.Add(ParseTerm(_reactant));
+				reactionInfo.First.Add(ParseTerm(_reactant));
 			}
 
-			List<List<Pair<string, int>>> _right = new List<List<Pair<string, int>>>();
 			foreach (string _reactant in reaction.Second)
 			{
-				_right.Add(ParseTerm(_reactant));
+				reactionInfo.Second.Add(ParseTerm(_reactant));
 			}
 
-			Matrix _matrix = BuildMatrix(_left, _right);
+			Matrix _matrix = BuildMatrix(reactionInfo.First, reactionInfo.Second);
 			SolveMatrix(_matrix);
 
 			return _matrix.ExtractCoefficients();

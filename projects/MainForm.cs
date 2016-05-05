@@ -31,14 +31,22 @@ namespace ReactionSeriesSolver
 
 			try
 			{
+				Pair<List<List<Pair<string, int>>>, List<List<Pair<string, int>>>> _reactionInfo = new Pair<List<List<Pair<string, int>>>, List<List<Pair<string, int>>>>();
+				_reactionInfo.First = new List<List<Pair<string, int>>>();
+				_reactionInfo.Second = new List<List<Pair<string, int>>>();
+
 				Pair<List<string>, List<string>> _reaction = Processor.AnalyzeReaction(_reactionStr);
 
 				int _reactionTargetId = Processor.FindReaction(ReactionList, _reaction);
 
+				if (_reactionTargetId == -1)
+					throw new Exception("Cannot find reaction! Please check your input...");
+
 				if (ReactionList[_reactionTargetId] != null)
 				{
-					List<int> _coefficients = ReactionBalancer.BalanceReaction(ReactionList[_reactionTargetId]);
-					txt_result_reaction.Text = Processor.GenerateReaction(ReactionList[_reactionTargetId], _coefficients);
+					List<int> _coefficients = ReactionBalancer.BalanceReaction(ReactionList[_reactionTargetId], _reactionInfo);
+					txt_result_reaction.Text = Processor.GenerateReaction(_reactionInfo, _coefficients);
+					web_reaction.DocumentText = Processor.GenerateReaction(_reactionInfo, _coefficients);
 				}
 				else
 				{
@@ -111,10 +119,10 @@ namespace ReactionSeriesSolver
 
 				for (int i = 0; i < _reactionSeries.Count; i++)
 				{
-					List<int> _coefficients = ReactionBalancer.BalanceReaction(ReactionList[_reactionId[i]]);
-					txt_result_reactionSeries.Text += "(" + (i + 1) + "): ";
-					txt_result_reactionSeries.Text += Processor.GenerateReaction(ReactionList[_reactionId[i]], _coefficients);
-					txt_result_reactionSeries.Text += Environment.NewLine;
+					//List<int> _coefficients = ReactionBalancer.BalanceReaction(ReactionList[_reactionId[i]], ReactionInfo);
+					//txt_result_reactionSeries.Text += "(" + (i + 1) + "): ";
+					//txt_result_reactionSeries.Text += Processor.GenerateReaction(ReactionList[_reactionId[i]], _coefficients);
+					//txt_result_reactionSeries.Text += Environment.NewLine;
 				}
 			}
 			catch (Exception ex)

@@ -31,9 +31,9 @@ namespace ReactionSeriesSolver
 
 			try
 			{
-				Pair<List<List<Pair<string, int>>>, List<List<Pair<string, int>>>> _reactionInfo = new Pair<List<List<Pair<string, int>>>, List<List<Pair<string, int>>>>();
-				_reactionInfo.First = new List<List<Pair<string, int>>>();
-				_reactionInfo.Second = new List<List<Pair<string, int>>>();
+				Pair<List<List<Element>>, List<List<Element>>> _reactionInfo = new Pair<List<List<Element>>, List<List<Element>>>();
+				_reactionInfo.First = new List<List<Element>>();
+				_reactionInfo.Second = new List<List<Element>>();
 
 				Pair<List<string>, List<string>> _reaction = Processor.AnalyzeReaction(_reactionStr);
 

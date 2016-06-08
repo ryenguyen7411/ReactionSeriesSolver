@@ -30,8 +30,8 @@
         {
 			this.tab_pageControl = new System.Windows.Forms.TabControl();
 			this.tab_reaction = new System.Windows.Forms.TabPage();
-			this.tab_reactionSeries = new System.Windows.Forms.TabPage();
 			this.web_reaction = new System.Windows.Forms.WebBrowser();
+			this.tab_reactionSeries = new System.Windows.Forms.TabPage();
 			this.txt_result_reaction = new LollipopTextBox();
 			this.btn_solve_reaction = new LollipopButton();
 			this.txt_reaction = new LollipopTextBox();
@@ -67,6 +67,14 @@
 			this.tab_reaction.Text = "Reaction";
 			this.tab_reaction.UseVisualStyleBackColor = true;
 			// 
+			// web_reaction
+			// 
+			this.web_reaction.Location = new System.Drawing.Point(24, 132);
+			this.web_reaction.MinimumSize = new System.Drawing.Size(20, 20);
+			this.web_reaction.Name = "web_reaction";
+			this.web_reaction.Size = new System.Drawing.Size(430, 223);
+			this.web_reaction.TabIndex = 3;
+			// 
 			// tab_reactionSeries
 			// 
 			this.tab_reactionSeries.Controls.Add(this.txt_result_reactionSeries);
@@ -79,14 +87,6 @@
 			this.tab_reactionSeries.TabIndex = 1;
 			this.tab_reactionSeries.Text = "Reaction Series";
 			this.tab_reactionSeries.UseVisualStyleBackColor = true;
-			// 
-			// web_reaction
-			// 
-			this.web_reaction.Location = new System.Drawing.Point(24, 132);
-			this.web_reaction.MinimumSize = new System.Drawing.Size(20, 20);
-			this.web_reaction.Name = "web_reaction";
-			this.web_reaction.Size = new System.Drawing.Size(430, 223);
-			this.web_reaction.TabIndex = 3;
 			// 
 			// txt_result_reaction
 			// 
@@ -179,6 +179,7 @@
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(784, 441);
 			this.Controls.Add(this.tab_pageControl);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Reaction Series Solver";

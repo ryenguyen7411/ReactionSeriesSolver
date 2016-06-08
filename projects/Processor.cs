@@ -61,9 +61,20 @@ namespace ReactionSeriesSolver
 		public static Pair<List<string>, List<string>> AnalyzeReaction(string reactionStr)
 		{
 			reactionStr = reactionStr.Split('|')[0];
+
 			reactionStr = reactionStr.Replace(" ", "");
+			reactionStr = reactionStr.Replace("[", "(");
+			reactionStr = reactionStr.Replace("]", ")");
 			reactionStr = reactionStr.Replace("=", "->");
+
 			string[] _sides = reactionStr.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
+
+			//Match _match = Regex.Match(_sides[0], @"([A-Z][a-z]?\d*|\(.*?\)\d+)+(\^\d*([+-]))?");
+
+			//while(_match.Success)
+			//{
+
+			//}
 
 			string[] _reactants = _sides[0].Split('+');
 			string[] _products = _sides[1].Split('+');
@@ -97,46 +108,63 @@ namespace ReactionSeriesSolver
 			return -1;
 		}
 
-		delegate string HTMLGenerator(string className, string value);
-		delegate string TextFormat(string tag, string value);
-		delegate string ReactionSideGenerator(List<List<Pair<string, int>>> info, List<int> coefs, int offset);
-		
-		public static string GenerateReaction(Pair<List<List<Pair<string, int>>>, List<List<Pair<string, int>>>> reactionInfo, List<int> coefficients)
+		private static string HTMLGenerator(string value, string className = "", string tag = "span")
 		{
-			HTMLGenerator _generator = delegate(string className, string value){
-				return "<span class=\"" + className + "\">" + value + "</span>";
-			};
+			return "<" + tag + (className != "" ? " class=\"" + className + "\"" : "") + ">" + value + "</" + tag + ">";
+		}
 
-			TextFormat _formater = delegate (string tag, string value) {
-				return "<" + tag + ">" + value + "</" + tag + ">";
-			};
+		private static string ElementGenerator(Element element)
+		{
+			string _element = "";
 
-			ReactionSideGenerator _sideGenerator = delegate(List<List<Pair<string, int>>> info, List<int> coefs, int offset){
-				string _value = "";
-
-				for (int i = 0; i < info.Count; i++)
+			if (element.m_element != null)
+			{
+				_element += HTMLGenerator(element.m_element, "element");
+			}
+			else
+			{
+				_element += HTMLGenerator("(");
+				foreach (Element __child in element.m_children)
 				{
-					if (coefficients[i + offset] != 1)
-						_value += _generator("coeff", coefficients[i + offset].ToString());
+					_element += ElementGenerator(__child);
+				}
+				_element += HTMLGenerator(")");
+			}
 
-					foreach (Pair<string, int> _element in info[i])
-					{
-						_value += _generator("element", _element.First);
-						if (_element.Second != 1)
-							_value += _formater("sub", _element.Second.ToString());
-					}
+			if (element.m_count != 1)
+				_element += HTMLGenerator(element.m_count.ToString(), "", "sub");
 
-					if (i < info.Count - 1)
-						_value += _generator("", " + ");
+			return _element;
+		}
+
+		private static string ReactionSideGenerator(List<List<Element>> info, List<int> coefs, int offset)
+		{
+			string _side = "";
+
+			for (int i = 0; i < info.Count; i++)
+			{
+				if (coefs[i + offset] != 1)
+					_side += HTMLGenerator(coefs[i + offset].ToString(), "coeff");
+
+				foreach (Element _element in info[i])
+				{
+					_side += ElementGenerator(_element);
 				}
 
-				return _value;
-			};
+				if (i < info.Count - 1)
+					_side += HTMLGenerator(" + ", "plus");
+			}
 
+			return _side;
+		}
+
+		public static string GenerateReaction(Pair<List<List<Element>>, List<List<Element>>> reactionInfo, List<int> coefficients)
+		{
 			string _reaction = "";
-			_reaction += _sideGenerator(reactionInfo.First, coefficients, 0);
-			_reaction += _generator("arrow", " → ");
-			_reaction += _sideGenerator(reactionInfo.First, coefficients, reactionInfo.First.Count);
+
+			_reaction += ReactionSideGenerator(reactionInfo.First, coefficients, 0);
+			_reaction += HTMLGenerator(" → ", "arrow");
+			_reaction += ReactionSideGenerator(reactionInfo.Second, coefficients, reactionInfo.First.Count);
 
 			return _reaction;
 		}

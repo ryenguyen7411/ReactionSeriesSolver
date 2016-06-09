@@ -25,18 +25,13 @@ namespace ReactionSeriesSolver
 	{
 		public static List<int> BalanceReaction(Pair<List<string>, List<string>> reaction, Pair<List<List<Element>>, List<List<Element>>> reactionInfo)
 		{
-			//Pair<List<List<Element>>, List<List<Element>>> _info = new Pair<List<List<Element>>, List<List<Element>>>();
-			//_info.First = new List<List<Element>>();
 			foreach (string _reactant in reaction.First)
 			{
-				//_info.First.Add(new List<Element>());
 				reactionInfo.First.Add(ParseTerm(_reactant));
 			}
 
-			//_info.Second = new List<List<Element>>();
 			foreach (string _reactant in reaction.Second)
 			{
-				//_info.Second.Add(new List<Element>());
 				reactionInfo.Second.Add(ParseTerm(_reactant));
 			}
 
@@ -141,35 +136,34 @@ namespace ReactionSeriesSolver
 					string _group = FindFirstGroup(term.Substring(i));
 					info.Add(ParseGroup(_group, _items));
 					i += _group.Length;
-					
 				}
-				else if(term[i] == 'e')
-				{
-					_items.Add(new Pair<string, int>("e", 1));
+				//else if(term[i] == 'e')
+				//{
+				//	_items.Add(new Pair<string, int>("e", 1));
 
-					if(term[i + 1] != 0)
-						throw new Exception("Invalid term at " + i + " - electron needs to stand alone");
+				//	if(term[i + 1] != 0)
+				//		throw new Exception("Invalid term at " + i + " - electron needs to stand alone");
 
-					break;
-				}
-				else if(term[i] == '^')
-				{
-					string _quantityStr = Regex.Match(term.Substring(i), @"(\d+)").Value;
-					int _quantity = (_quantityStr != "") ? int.Parse(_quantityStr) : 1;
+				//	break;
+				//}
+				//else if(term[i] == '^')
+				//{
+				//	string _quantityStr = Regex.Match(term.Substring(i), @"(\d+)").Value;
+				//	int _quantity = (_quantityStr != "") ? int.Parse(_quantityStr) : 1;
 
-					i += _quantityStr.Length + 1;
-					if(term[i] == '+')
-					{
-						_quantity *= -1;
-					}
-					else if(term[i] != '-')
-					{
-						throw new Exception("Wrong sign expect at " + i);
-					}
+				//	i += _quantityStr.Length + 1;
+				//	if(term[i] == '+')
+				//	{
+				//		_quantity *= -1;
+				//	}
+				//	else if(term[i] != '-')
+				//	{
+				//		throw new Exception("Wrong sign expect at " + i);
+				//	}
 
-					_items.Add(new Pair<string, int>("e", _quantity));
-					break;
-				}
+				//	_items.Add(new Pair<string, int>("e", _quantity));
+				//	break;
+				//}
 				else
 					throw new Exception("Invalid element name at " + i);
 			}

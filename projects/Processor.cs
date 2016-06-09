@@ -69,13 +69,6 @@ namespace ReactionSeriesSolver
 
 			string[] _sides = reactionStr.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
 
-			//Match _match = Regex.Match(_sides[0], @"([A-Z][a-z]?\d*|\(.*?\)\d+)+(\^\d*([+-]))?");
-
-			//while(_match.Success)
-			//{
-
-			//}
-
 			string[] _reactants = _sides[0].Split('+');
 			string[] _products = _sides[1].Split('+');
 
@@ -84,6 +77,11 @@ namespace ReactionSeriesSolver
 
 		public static List<Pair<List<string>, List<string>>> AnalyzeReactionSeries(string reactionSeriesStr)
 		{
+			reactionSeriesStr = reactionSeriesStr.Replace(" ", "");
+			reactionSeriesStr = reactionSeriesStr.Replace("[", "(");
+			reactionSeriesStr = reactionSeriesStr.Replace("]", ")");
+			reactionSeriesStr = reactionSeriesStr.Replace("=", "->");
+
 			List<Pair<List<string>, List<string>>> _reactionSeries = new List<Pair<List<string>, List<string>>>();
 
 			string[] _sides = reactionSeriesStr.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
@@ -137,7 +135,7 @@ namespace ReactionSeriesSolver
 			return _element;
 		}
 
-		private static string ReactionSideGenerator(List<List<Element>> info, List<int> coefs, int offset)
+		private static string ReactionSideGenerator(List<List<Element>> info, List<int> coefs, int offset = 0)
 		{
 			string _side = "";
 
@@ -162,7 +160,7 @@ namespace ReactionSeriesSolver
 		{
 			string _reaction = "";
 
-			_reaction += ReactionSideGenerator(reactionInfo.First, coefficients, 0);
+			_reaction += ReactionSideGenerator(reactionInfo.First, coefficients);
 			_reaction += HTMLGenerator(" → ", "arrow");
 			_reaction += ReactionSideGenerator(reactionInfo.Second, coefficients, reactionInfo.First.Count);
 

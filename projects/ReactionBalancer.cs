@@ -101,13 +101,13 @@ namespace ReactionSeriesSolver
 			if (element.m_element != null)
 			{
 				int _index = matrix.ElementList.IndexOf(element.m_element);
-				matrix[_index, column] = count * ratio;
+				matrix[_index, column] += count * ratio;
 			}
 			else
 			{
 				foreach(Element child in element.m_children)
 				{
-					GetIndex(matrix, child, column, element.m_count * child.m_count, ratio);
+					GetIndex(matrix, child, column, count * child.m_count, ratio);
 				}
 			}
 		}
@@ -115,8 +115,6 @@ namespace ReactionSeriesSolver
 		public static List<Element> ParseTerm(string term)
 		{
 			List<Element> info = new List<Element>();
-
-			List<Pair<string, int>> _items = new List<Pair<string, int>>();
 
 			int i = 0;
 			while (i < term.Length)
@@ -127,15 +125,15 @@ namespace ReactionSeriesSolver
 
 					if (_regexMatched.Success)
 					{
-						info.Add(ParseElement(_regexMatched.Value, _items));
+						info.Add(ParseElement(_regexMatched.Value));
 						i += _regexMatched.Value.Length;
 					}
 				}
 				else if(term[i] == '(')
 				{
-					string _group = FindFirstGroup(term.Substring(i));
-					info.Add(ParseGroup(_group, _items));
-					i += _group.Length;
+					int _groupLength = 0;
+					info.Add(ParseGroup(term.Substring(i), ref _groupLength));
+					i += _groupLength;
 				}
 				//else if(term[i] == 'e')
 				//{
@@ -171,18 +169,16 @@ namespace ReactionSeriesSolver
 			return info;
 		}
 
-		private static Element ParseElement(string term, List<Pair<string, int>> list, int ratio = 1)
+		private static Element ParseElement(string term)
 		{
 			string _quantityStr = Regex.Match(term, @"(\d+)").Value;
-			int _quantity = ratio;
+			int _quantity = 1;
 
 			if (_quantityStr != "")
 			{
 				term = term.Substring(0, term.Length - _quantityStr.Length);
-				_quantity = int.Parse(_quantityStr) * ratio;
+				_quantity = int.Parse(_quantityStr);
 			}
-
-			list.Add(new Pair<string, int>(term, _quantity));
 
 			Element _element = new Element();
 			_element.m_element = term;
@@ -191,24 +187,27 @@ namespace ReactionSeriesSolver
 			return _element;
 		}
 
-		private static Element ParseGroup(string term, List<Pair<string, int>> list, int ratio = 1)
+		private static Element ParseGroup(string term, ref int length)
 		{
 			Element info = new Element();
 
-			string _ratioStr = Regex.Match(term, @"(\d+)(?!.*\d)").Value;
-			int _ratio = ratio;
+			//string _ratioStr = Regex.Match(term, @"(\d+)(?!.*\d)").Value;
+			//int _ratio = ratio;
 
-			int _groupRatio = 1;
+			//int _groupRatio = 1;
 
-			if (_ratioStr != "")
-			{
-				term = term.Substring(0, term.Length - _ratioStr.Length);
-				_ratio = int.Parse(_ratioStr) * ratio;
-				_groupRatio = int.Parse(_ratioStr);
-			}
+			//if (_ratioStr != "")
+			//{
+			//	term = term.Substring(0, term.Length - _ratioStr.Length);
+			//	_ratio = int.Parse(_ratioStr) * ratio;
+			//	_groupRatio = int.Parse(_ratioStr);
+			//}
 
-			info.m_count = _groupRatio;
-			term = term.Substring(1, term.Length - 2);
+			//info.m_count = _groupRatio;
+
+
+			term = term.Substring(1);
+			length += 1;
 
 			int i = 0;
 			while (i < term.Length)
@@ -219,17 +218,31 @@ namespace ReactionSeriesSolver
 
 					if (_regexMatched.Success)
 					{
-						info.m_children.Add(ParseElement(_regexMatched.Value, list, _ratio));
-						info.m_children.Last().m_count /= _groupRatio;
+						info.m_children.Add(ParseElement(_regexMatched.Value));
 						i += _regexMatched.Value.Length;
+						length += _regexMatched.Value.Length;
 					}
 				}
 				else if (term[i] == '(')
 				{
-					string _group = FindFirstGroup(term.Substring(i));
-					info.m_children.Add(ParseGroup(_group, list, _ratio));
-					info.m_children.Last().m_count /= _groupRatio;
-					i += _group.Length;
+					int _groupLength = 0;
+					info.m_children.Add(ParseGroup(term.Substring(i), ref _groupLength));
+					i += _groupLength;
+					length += _groupLength;
+				}
+				else if (term[i] == ')')
+				{
+					string _quantityStr = Regex.Match(term.Substring(i), @"(\d+)").Value;
+					int _quantity = 1;
+
+					if (_quantityStr != "")
+					{
+						_quantity = int.Parse(_quantityStr);
+					}
+
+					info.m_count = _quantity;
+					length += _quantityStr.Length + 1;
+					break;
 				}
 				else
 					throw new Exception("Invalid element name at " + i);
@@ -279,7 +292,6 @@ namespace ReactionSeriesSolver
 
 		private static void GetUniqueElements(List<List<Element>> list, List<string> elementList)
 		{
-
 			foreach (List<Element> items in list)
 			{
 				foreach (Element item in items)

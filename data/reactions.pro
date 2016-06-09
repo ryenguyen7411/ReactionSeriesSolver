@@ -36,3 +36,4 @@ K2Cr2O7 + KI + H2SO4 -> Cr2(SO4)3 + I2 + H2O + K2SO4
 H2O2 + Cr2O7^2- -> Cr^3- + O2 + OH^-
 H2C2O4 + MnO4^- -> H2O + CO2 + MnO + OH^-
 K4Fe(CN)6 + KMnO4 + H2SO4 -> KHSO4 + Fe2(SO4)3 + MnSO4 + HNO3 + CO2 + H2O
+(K3(OH)2)4(SO4)3 -> H2 + K2 + O2 + S

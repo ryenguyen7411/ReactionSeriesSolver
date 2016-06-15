@@ -135,33 +135,6 @@ namespace ReactionSeriesSolver
 					info.Add(ParseGroup(term.Substring(i), ref _groupLength));
 					i += _groupLength;
 				}
-				//else if(term[i] == 'e')
-				//{
-				//	_items.Add(new Pair<string, int>("e", 1));
-
-				//	if(term[i + 1] != 0)
-				//		throw new Exception("Invalid term at " + i + " - electron needs to stand alone");
-
-				//	break;
-				//}
-				//else if(term[i] == '^')
-				//{
-				//	string _quantityStr = Regex.Match(term.Substring(i), @"(\d+)").Value;
-				//	int _quantity = (_quantityStr != "") ? int.Parse(_quantityStr) : 1;
-
-				//	i += _quantityStr.Length + 1;
-				//	if(term[i] == '+')
-				//	{
-				//		_quantity *= -1;
-				//	}
-				//	else if(term[i] != '-')
-				//	{
-				//		throw new Exception("Wrong sign expect at " + i);
-				//	}
-
-				//	_items.Add(new Pair<string, int>("e", _quantity));
-				//	break;
-				//}
 				else
 					throw new Exception("Invalid element name at " + i);
 			}
@@ -190,21 +163,6 @@ namespace ReactionSeriesSolver
 		private static Element ParseGroup(string term, ref int length)
 		{
 			Element info = new Element();
-
-			//string _ratioStr = Regex.Match(term, @"(\d+)(?!.*\d)").Value;
-			//int _ratio = ratio;
-
-			//int _groupRatio = 1;
-
-			//if (_ratioStr != "")
-			//{
-			//	term = term.Substring(0, term.Length - _ratioStr.Length);
-			//	_ratio = int.Parse(_ratioStr) * ratio;
-			//	_groupRatio = int.Parse(_ratioStr);
-			//}
-
-			//info.m_count = _groupRatio;
-
 
 			term = term.Substring(1);
 			length += 1;
@@ -249,17 +207,6 @@ namespace ReactionSeriesSolver
 			}
 
 			return info;
-		}
-
-		// TODO: Parse complicate group, such as (K3(OH)2)2(SO4)3
-		private static string FindFirstGroup(string term)
-		{
-			Match _regexMatched = Regex.Match(term, @"\((.*)\)([0-9]+)?");
-
-			if (_regexMatched.Success)
-				return _regexMatched.Value;
-
-			return null;
 		}
 
 		private static void AddElement(Element element, List<string> _elementList, int coefs = 1)

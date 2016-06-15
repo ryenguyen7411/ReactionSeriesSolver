@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ReactionSeriesSolver
 {
@@ -176,27 +177,35 @@ namespace ReactionSeriesSolver
 
 		public List<int> ExtractCoefficients()
 		{
-			if(Cols - 1 > Rows || Values[Cols - 2][Cols - 2] == 0)
-				throw new Exception("Multiple independent solutions");
-
-			int _lcm = 1;
-			for(int i = 0; i < Cols - 1; i++)
-				_lcm = (_lcm / Processor.GCD(_lcm, Values[i][i])) * Values[i][i];
-
-			bool _flag = true;
-			List<int> _coefficients = new List<int>();
-
-			for(int i = 0; i < Cols - 1; i++)
+			try
 			{
-				int _value = (_lcm / Processor.GCD(_lcm, Values[i][i])) * Values[i][Cols - 1];
-				_coefficients.Add(_value);
-				_flag &= (_value == 0);
+				if (Cols - 1 > Rows || Values[Cols - 2][Cols - 2] == 0)
+					throw new Exception("Multiple independent solutions");
+
+				int _lcm = 1;
+				for (int i = 0; i < Cols - 1; i++)
+					_lcm = (_lcm / Processor.GCD(_lcm, Values[i][i])) * Values[i][i];
+
+				bool _flag = true;
+				List<int> _coefficients = new List<int>();
+
+				for (int i = 0; i < Cols - 1; i++)
+				{
+					int _value = (_lcm / Processor.GCD(_lcm, Values[i][i])) * Values[i][Cols - 1];
+					_coefficients.Add(_value);
+					_flag &= (_value == 0);
+				}
+
+				if (_flag)
+					throw new Exception("Assertion error: All-zero solution");
+
+				return _coefficients;
 			}
-
-			if(_flag)
-				throw new Exception("Assertion error: All-zero solution");
-
-			return _coefficients;
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.ToString());
+				return null;
+			}
 		}
 	}
 }

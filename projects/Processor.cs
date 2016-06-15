@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace ReactionSeriesSolver
 {
@@ -72,7 +71,7 @@ namespace ReactionSeriesSolver
 			string[] _reactants = _sides[0].Split('+');
 			string[] _products = _sides[1].Split('+');
 
-			return new Pair<List<string>, List<string>>(_reactants.ToList<string>(), _products.ToList<string>());
+			return new Pair<List<string>, List<string>>(_reactants.ToList(), _products.ToList());
 		}
 
 		public static List<Pair<List<string>, List<string>>> AnalyzeReactionSeries(string reactionSeriesStr)

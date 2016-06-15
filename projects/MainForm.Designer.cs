@@ -32,12 +32,11 @@
 			this.tab_reaction = new System.Windows.Forms.TabPage();
 			this.web_reaction = new System.Windows.Forms.WebBrowser();
 			this.tab_reactionSeries = new System.Windows.Forms.TabPage();
-			this.txt_result_reaction = new LollipopTextBox();
 			this.btn_solve_reaction = new LollipopButton();
 			this.txt_reaction = new LollipopTextBox();
-			this.txt_result_reactionSeries = new LollipopTextBox();
 			this.btn_solve_reactionSeries = new LollipopButton();
 			this.txt_reactionSeries = new LollipopTextBox();
+			this.web_reaction_series = new System.Windows.Forms.WebBrowser();
 			this.tab_pageControl.SuspendLayout();
 			this.tab_reaction.SuspendLayout();
 			this.tab_reactionSeries.SuspendLayout();
@@ -56,7 +55,6 @@
 			// tab_reaction
 			// 
 			this.tab_reaction.Controls.Add(this.web_reaction);
-			this.tab_reaction.Controls.Add(this.txt_result_reaction);
 			this.tab_reaction.Controls.Add(this.btn_solve_reaction);
 			this.tab_reaction.Controls.Add(this.txt_reaction);
 			this.tab_reaction.Location = new System.Drawing.Point(4, 22);
@@ -69,15 +67,16 @@
 			// 
 			// web_reaction
 			// 
-			this.web_reaction.Location = new System.Drawing.Point(24, 132);
+			this.web_reaction.Location = new System.Drawing.Point(158, 132);
 			this.web_reaction.MinimumSize = new System.Drawing.Size(20, 20);
 			this.web_reaction.Name = "web_reaction";
+			this.web_reaction.ScrollBarsEnabled = false;
 			this.web_reaction.Size = new System.Drawing.Size(430, 223);
 			this.web_reaction.TabIndex = 3;
 			// 
 			// tab_reactionSeries
 			// 
-			this.tab_reactionSeries.Controls.Add(this.txt_result_reactionSeries);
+			this.tab_reactionSeries.Controls.Add(this.web_reaction_series);
 			this.tab_reactionSeries.Controls.Add(this.btn_solve_reactionSeries);
 			this.tab_reactionSeries.Controls.Add(this.txt_reactionSeries);
 			this.tab_reactionSeries.Location = new System.Drawing.Point(4, 22);
@@ -87,21 +86,6 @@
 			this.tab_reactionSeries.TabIndex = 1;
 			this.tab_reactionSeries.Text = "Reaction Series";
 			this.tab_reactionSeries.UseVisualStyleBackColor = true;
-			// 
-			// txt_result_reaction
-			// 
-			this.txt_result_reaction.FocusedColor = "#508ef5";
-			this.txt_result_reaction.FontColor = "#999999";
-			this.txt_result_reaction.IsEnabled = true;
-			this.txt_result_reaction.Location = new System.Drawing.Point(460, 132);
-			this.txt_result_reaction.MaxLength = 32767;
-			this.txt_result_reaction.Multiline = true;
-			this.txt_result_reaction.Name = "txt_result_reaction";
-			this.txt_result_reaction.ReadOnly = false;
-			this.txt_result_reaction.Size = new System.Drawing.Size(289, 223);
-			this.txt_result_reaction.TabIndex = 2;
-			this.txt_result_reaction.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
-			this.txt_result_reaction.UseSystemPasswordChar = false;
 			// 
 			// btn_solve_reaction
 			// 
@@ -130,21 +114,6 @@
 			this.txt_reaction.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
 			this.txt_reaction.UseSystemPasswordChar = false;
 			// 
-			// txt_result_reactionSeries
-			// 
-			this.txt_result_reactionSeries.FocusedColor = "#508ef5";
-			this.txt_result_reactionSeries.FontColor = "#999999";
-			this.txt_result_reactionSeries.IsEnabled = true;
-			this.txt_result_reactionSeries.Location = new System.Drawing.Point(161, 145);
-			this.txt_result_reactionSeries.MaxLength = 32767;
-			this.txt_result_reactionSeries.Multiline = true;
-			this.txt_result_reactionSeries.Name = "txt_result_reactionSeries";
-			this.txt_result_reactionSeries.ReadOnly = false;
-			this.txt_result_reactionSeries.Size = new System.Drawing.Size(430, 164);
-			this.txt_result_reactionSeries.TabIndex = 5;
-			this.txt_result_reactionSeries.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
-			this.txt_result_reactionSeries.UseSystemPasswordChar = false;
-			// 
 			// btn_solve_reactionSeries
 			// 
 			this.btn_solve_reactionSeries.BackColor = System.Drawing.Color.Transparent;
@@ -172,6 +141,15 @@
 			this.txt_reactionSeries.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
 			this.txt_reactionSeries.UseSystemPasswordChar = false;
 			// 
+			// web_reaction_series
+			// 
+			this.web_reaction_series.Location = new System.Drawing.Point(158, 132);
+			this.web_reaction_series.MinimumSize = new System.Drawing.Size(20, 20);
+			this.web_reaction_series.Name = "web_reaction_series";
+			this.web_reaction_series.ScrollBarsEnabled = false;
+			this.web_reaction_series.Size = new System.Drawing.Size(430, 223);
+			this.web_reaction_series.TabIndex = 5;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -197,13 +175,12 @@
 		private System.Windows.Forms.TabControl tab_pageControl;
 		private System.Windows.Forms.TabPage tab_reaction;
 		private System.Windows.Forms.TabPage tab_reactionSeries;
-		private LollipopTextBox txt_result_reaction;
 		private LollipopButton btn_solve_reaction;
 		private LollipopTextBox txt_reaction;
-		private LollipopTextBox txt_result_reactionSeries;
 		private LollipopButton btn_solve_reactionSeries;
 		private LollipopTextBox txt_reactionSeries;
 		private System.Windows.Forms.WebBrowser web_reaction;
+		private System.Windows.Forms.WebBrowser web_reaction_series;
 	}
 }
 
